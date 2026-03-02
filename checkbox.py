@@ -1,11 +1,10 @@
 import customtkinter as ctk
 
-app_load_list = ["app1", "app2", "app3", "app4"]
-
 
 class CheckRad(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, app_load_list, **kwargs):
         super().__init__(master, **kwargs)
+        self.app_load_list = app_load_list
         # Vi konfigurerar kolumnerna så att textfälten (1 och 3) kan expandera
         self.grid_columnconfigure((1, 2, 3, 4, 5), weight=1)
         # skapa lista för att spara referenser till checkboxar som det behövs senare
@@ -30,14 +29,14 @@ class CheckRad(ctk.CTkFrame):
         self.fil_label.grid(row=0, column=4, padx=5, sticky="e")
 
     def add_to_load_list(self, name):
-        if name not in app_load_list:
-            app_load_list.append(name)
-            app_load_list.sort()
+        if name not in self.app_load_list:
+            self.app_load_list.append(name)
+            self.app_load_list.sort()
         else:
-            app_load_list.remove(name)
+            self.app_load_list.remove(name)
 
-        self.fil_label.configure(text=str(app_load_list))
-        print(f"Nuvarande lista: {app_load_list}")
+        self.fil_label.configure(text=str(self.app_load_list))
+        print(f"Nuvarande lista: {self.app_load_list}")
 
 
 # 2. HUVUDAPPEN

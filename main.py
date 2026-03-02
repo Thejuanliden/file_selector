@@ -1,58 +1,37 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
+import customtkinter as ctk
+from checkbox import CheckRad
+from file_selector import FilRad
+from tkinter import filedialog
+
+app_load_list = ["app1", "app2", "app3", "app4"]
 
 
-def choose_file():
-    # Öppnar en fildialog för att välja en enskild fil
-    file_path = filedialog.askopenfilename(title="Välj en fil")
-    if file_path:
-        listbox.insert(tk.END, f"FIL: {file_path}")
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("Rad-test")
+        self.geometry("800x400")
+
+        # Gör så att raderna kan fylla ut hela bredden
+        self.grid_columnconfigure(0, weight=1)
+
+        # Data för våra 5 rader
+        installningar = [
+            (app_load_list[0], "/home/user", "Kör"),
+            (app_load_list[1], "/home/user/pics", "Importera"),
+            (app_load_list[2], "/var/log", "Rensa"),
+            (app_load_list[3], "/home/user/music", "Spara"),
+        ]
+
+        check_rad = CheckRad(self, app_load_list)
+        check_rad.grid(row=0, column=0, sticky="ew", padx=10, pady=5)
+
+        # Skapa raderna med en loop
+        for i, (namn, path, btn) in enumerate(installningar):
+            rad = FilRad(self, label_text=namn, default_path=path, button_name=btn)
+            rad.grid(row=(i + 1), column=0, sticky="ew", padx=10, pady=5)
 
 
-def choose_folder():
-    # Öppnar en dialog för att välja en mapp
-    folder_path = filedialog.askdirectory(title="Välj en mapp")
-
-    if folder_path:
-        listbox.insert(tk.END, f"MAPP: {folder_path}")
-
-
-def save_to_list():
-    # Hämtar allt innehåll från listboxen som en lista av strängar
-    items = listbox.get(0, tk.END)
-    if not items:
-        messagebox.showwarning("Varning", "Listan är tom!")
-        return
-
-    # Här kan du göra vad du vill med strängarna, t.ex. printa dem
-    print("Valda sökvägar sparade som strängar:")
-    for item in items:
-        print(item)
-
-    messagebox.showinfo(
-        "Klart", "Sökvägarna har sparats som textsträngar (se konsolen)."
-    )
-
-
-# Grundinställningar för fönstret
-root = tk.Tk()
-root.title("Fil- & Mappväljare")
-root.geometry("500x400")
-
-# Knappar
-btn_frame = tk.Frame(root)
-btn_frame.pack(pady=10)
-
-tk.Button(btn_frame, text="Välj fil", command=choose_file).pack(side=tk.LEFT, padx=5)
-tk.Button(btn_frame, text="Välj mapp", command=choose_folder).pack(side=tk.LEFT, padx=5)
-
-# Lista för att visa valda objekt
-listbox = tk.Listbox(root, width=60, height=15)
-listbox.pack(pady=10, padx=10)
-
-# Spara-knapp
-tk.Button(
-    root, text="Spara valda strängar", command=save_to_list, bg="lightgreen"
-).pack(pady=5)
-
-root.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
